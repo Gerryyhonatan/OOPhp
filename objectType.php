@@ -13,12 +13,20 @@ class product {
     }
     
     public function getLabel() {
-        return "$this->penulis, $this->penerbit, $this->judul";
+        return "$this->penulis, $this->penerbit";
     }
 }
 
+class cetakInfoProduct {
+    public function cetak(product $product) {
+        $str = "{$product->judul} | {$product->getLabel()} (Rp. {$product->harga})";
+        return $str;
+    }
+}
 
 $product1 = new product("One Piece", "Eichiro Oda", "Gramedia", 150000);
-echo $product1->getLabel();
+
+$infoProduct1 = new cetakInfoProduct();
+echo $infoProduct1->cetak($product1);
 
 ?>
