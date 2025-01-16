@@ -1,5 +1,5 @@
 <?php
-class product {
+abstract class product {
     private $judul,
     $penulis,
     $penerbit,
@@ -58,7 +58,10 @@ class product {
         return "$this->penulis, $this->penerbit";
     }
 
-    public function getInfoProduct() {
+    abstract public function getInfoProduct(); 
+    
+    
+    public function getInfo() {
         $str = "{$this->judul} | {$this->getLabel()} (Rp. {$this->harga})";
 
         return $str;
@@ -75,7 +78,7 @@ class komik extends product {
     }
 
     public function getInfoProduct() {
-        $str = "Komik : " . parent::getInfoProduct() . " - {$this->jmlHalaman} Halaman.";
+        $str = "Komik : " . $this->getInfo() . " - {$this->jmlHalaman} Halaman.";
         return $str;
     }
 }
@@ -90,27 +93,37 @@ class game extends product {
     }
 
     public function getInfoProduct() {
-        $str = "Game : " . parent::getInfoProduct() . " - {$this->waktuMain} Jam.";
+        $str = "Game : " . $this->getInfo() . " - {$this->waktuMain} Jam.";
         return $str;
     }
 }
 
 class cetakInfoProduct {
-    public function cetak(product $product) {
-        $str = "{$product->judul} | {$product->getLabel()} (Rp. {$product->harga})";
+    public $daftarProduct = [];
+
+    public function tambahProduct( product $product) {
+        $this->daftarProduct[] = $product;
+    }
+
+
+    public function cetak() {
+        $str = "DAFTAR PRODUK : <br>";
+
+        foreach( $this->daftarProduct as $p) {
+            $str .= "- {$p->getInfoProduct()} <br>";
+        }
+
         return $str;
     }
 }
+
 
 $product1 = new komik("One Piece", "Eichiro Oda", "Shonen Jump", 150000, 100);
 $product2 = new game("One Punch Man", "Eichiro Kishimoto", "Sony Computer", 350000, 50);
 
 
-echo $product1->getInfoProduct();
-echo "<br>";
-echo $product2->getInfoProduct();
-echo "<hr>";
-
-$product1->setJudul("JudulBaru");
-echo $product1->getJudul();
+$cetakProduk = new cetakInfoProduct();
+$cetakProduk->tambahProduct( $product1 );
+$cetakProduk->tambahProduct($product2 );
+echo $cetakProduk->cetak();
 ?>
